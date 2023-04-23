@@ -35,7 +35,6 @@ public class Ringtonemain extends Fragment {
         activity = getActivity();
         parentHolder = inflater.inflate(R.layout.ringtone_main, container, false);
         super.onCreate(savedInstanceState);
-//      activity.setContentView(R.layout.ringtone_main);
 
         recyclerView = parentHolder.findViewById(R.id.recycler_view);
         noMusicTextView = parentHolder.findViewById(R.id.no_songs_text);

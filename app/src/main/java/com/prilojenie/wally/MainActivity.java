@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInOptions gso;
 
 
+    SharedPreferences sp;
+
+    boolean loggedIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
 
+        sp = getSharedPreferences("LoginState", MODE_PRIVATE);
+
+        loggedIn = sp.getBoolean("LoggedIn", false);
+
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -75,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
         gsc = GoogleSignIn.getClient(this, gso);
 
 
+        if(loggedIn)
+        {
+            sendToNextActivity();
+        }
 
         txtCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +150,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                         else
                         {
+                            SharedPreferences.Editor editor = sp.edit();
+                            loggedIn = true;
+                            editor.putBoolean("LoggedIn", loggedIn);
+                            editor.commit();
                             sendToNextActivity();
                             Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                         }
